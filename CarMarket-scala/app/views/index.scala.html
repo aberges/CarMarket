@@ -1,7 +1,18 @@
-@(message: String)
+@(car: Form[CreateCarForm])(implicit messages: Messages)
+
+@import helper._
 
 @main("Welcome to Play") {
+<script type='text/javascript' src='@routes.Assets.versioned("javascripts/index.js")'></script>
 
-    @play20.welcome(message)
+<ul id="persons"></ul>
 
+@form(routes.Application.insertCar()) {
+@inputText(car("name"))
+@inputText(car("color"))
+
+<div class="buttons">
+    <input type="submit" value="Add Car"/>
+</div>
+}
 }

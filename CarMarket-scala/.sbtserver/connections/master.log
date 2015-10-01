@@ -1,0 +1,14 @@
+New log file opened at Thu Oct 01 18:15:04 CEST 2015 by 4723@Alberts-MacBook-Pro.local
+Taking next connection to: 53111
+New client attempting to connect on port: 53112-53111
+  Address = /192.168.1.7:53111
+This client on port 53112 has uuid 7a285570-58f9-4d46-a2e7-ab9e31435bdd configName play-fork-run humanReadableName Play Fork Run protocolVersion 1 featureTags Vector()
+Connected Clients: play-fork-run-7a285570-58f9-4d46-a2e7-ab9e31435bdd
+Taking next connection to: 53111
+Checking to see if clients are empty...
+No non-daemon clients connected after 3 min. Shutting down.
+1 daemon clients are connected.
+Server socket thread exiting.
+1 clients open, will close them...
+All client sockets have been closed.
+Closing the 4723@Alberts-MacBook-Pro.local logs at Thu Oct 01 18:18:07 CEST 2015, goodbye.
