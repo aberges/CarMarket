@@ -37,6 +37,17 @@ class Application @Inject() (repo: CarDAO, val messagesApi: MessagesApi)
   }
 
   /**
+   * The mapping for the modifyCar form.
+   */
+  val modifyForm: Form[ModifyCarForm] = Form {
+    mapping(
+      "id" -> number.verifying(min(0), max(140)),
+      "name" -> nonEmptyText,
+      "color" -> nonEmptyText
+    )(ModifyCarForm.apply)(ModifyCarForm.unapply)
+  }
+
+  /**
    * The index action.
    */
   def index = Action {
@@ -48,6 +59,13 @@ class Application @Inject() (repo: CarDAO, val messagesApi: MessagesApi)
    */
   def delete = Action {
     Ok(views.html.delete(idForm))
+  }
+
+  /**
+   * The delete action.
+   */
+  def modify = Action {
+    Ok(views.html.modify(modifyForm))
   }
 
   /**
@@ -88,6 +106,14 @@ class Application @Inject() (repo: CarDAO, val messagesApi: MessagesApi)
     repo.delete(id)
     Future.successful(Ok(views.html.index(carForm)))
   }
+
+  def modifyCar = Action.async { implicit request =>
+    val id: Int = modifyForm.bindFromRequest.get.id
+    val name: String = modifyForm.bindFromRequest.get.name
+    val color: String = modifyForm.bindFromRequest.get.color
+    repo.modify(id,name,color)
+    Future.successful(Ok(views.html.index(carForm)))
+  }
 }
 
 /**
@@ -100,3 +126,5 @@ class Application @Inject() (repo: CarDAO, val messagesApi: MessagesApi)
 case class CreateCarForm(name: String, color: String)
 
 case class CreateIdForm(id: Int)
+
+case class ModifyCarForm(id: Int, name: String, color: String)

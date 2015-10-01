@@ -1,0 +1,14 @@
+@(car: Form[ModifyCarForm])(implicit messages: Messages)
+
+@import helper._
+
+@form(routes.Application.modifyCar()) {
+    @inputText(car("id"))
+    @inputText(car("name"))
+    @inputText(car("color"))
+
+    <div class="buttons">
+        <input type="submit" value="Add Car"/>
+    </div>
+}
+

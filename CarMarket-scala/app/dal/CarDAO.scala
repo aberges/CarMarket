@@ -85,4 +85,18 @@ class CarDAO @Inject() (dbConfigProvider: DatabaseConfigProvider)(implicit ec: E
     val sql = action.statements.head
     cars.result
   }
+
+  /**
+   * Modify a specific car in the database.
+   */
+  def modify(id: Int, name: String, color: String): Unit = db.run {
+    val q = for { c <- cars if c.id === id } yield (c.name,c.color)
+    val updateAction = q.update(name,color)
+
+    // Get the statement without having to specify an updated value:
+    //val sql = q.updateStatement
+    val affectedRowsCount: Future[Int] = db.run(updateAction)
+    val sql = updateAction.statements.head
+    cars.result
+  }
 }
