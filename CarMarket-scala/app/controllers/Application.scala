@@ -28,6 +28,15 @@ class Application @Inject() (repo: CarDAO, val messagesApi: MessagesApi)
   }
 
   /**
+   * The mapping for the id form.
+   */
+  val idForm: Form[CreateIdForm] = Form {
+    mapping(
+      "id" -> number.verifying(min(0), max(140))
+    )(CreateIdForm.apply)(CreateIdForm.unapply)
+  }
+
+  /**
    * The index action.
    */
   def index = Action {
@@ -35,9 +44,16 @@ class Application @Inject() (repo: CarDAO, val messagesApi: MessagesApi)
   }
 
   /**
-   * The add person action.
+   * The delete action.
+   */
+  def delete = Action {
+    Ok(views.html.delete(idForm))
+  }
+
+  /**
+   * The add car action.
    *
-   * This is asynchronous, since we're invoking the asynchronous methods on PersonRepository.
+   * This is asynchronous, since we're invoking the asynchronous methods on CarDAO.
    */
   def insertCar = Action.async { implicit request =>
     // Bind the form first, then fold the result, passing a function to handle errors, and a function to handle succes.
@@ -66,6 +82,12 @@ class Application @Inject() (repo: CarDAO, val messagesApi: MessagesApi)
       Ok(Json.toJson(people))
     }
   }
+
+  def deleteCar = Action.async { implicit request =>
+    val id: Int = idForm.bindFromRequest.get.id
+    repo.delete(id)
+    Future.successful(Ok(views.html.index(carForm)))
+  }
 }
 
 /**
@@ -76,3 +98,5 @@ class Application @Inject() (repo: CarDAO, val messagesApi: MessagesApi)
  * that is generated once it's created.
  */
 case class CreateCarForm(name: String, color: String)
+
+case class CreateIdForm(id: Int)

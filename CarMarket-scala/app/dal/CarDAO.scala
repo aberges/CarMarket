@@ -28,13 +28,10 @@ class CarDAO @Inject() (dbConfigProvider: DatabaseConfigProvider)(implicit ec: E
    */
   private class CarsTable(tag: Tag) extends Table[Car](tag, "cars") {
 
-    /** The ID column, which is the primary key, and auto incremented */
     def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
 
-    /** The name column */
     def name = column[String]("name")
 
-    /** The age column */
     def color = column[String]("color")
 
     /**
@@ -49,12 +46,12 @@ class CarDAO @Inject() (dbConfigProvider: DatabaseConfigProvider)(implicit ec: E
   }
 
   /**
-   * The starting point for all queries on the people table.
+   * The starting point for all queries on the cars table.
    */
   private val cars = TableQuery[CarsTable]
 
   /**
-   * Create a person with the given name and age.
+   * Create a person with the given params.
    *
    * This is an asynchronous operation, it will return a future of the created person, which can be used to obtain the
    * id for that person.
@@ -72,9 +69,20 @@ class CarDAO @Inject() (dbConfigProvider: DatabaseConfigProvider)(implicit ec: E
   }
 
   /**
-   * List all the people in the database.
+   * List all the cars in the database.
    */
   def all(): Future[Seq[Car]] = db.run {
+    cars.result
+  }
+
+  /**
+   * Delete a specific car in the database.
+   */
+  def delete(id: Int): Unit = db.run {
+    val q = cars.filter(_.id === id)
+    val action = q.delete
+    val affectedRowsCount: Future[Int] = db.run(action)
+    val sql = action.statements.head
     cars.result
   }
 }

@@ -1,0 +1,12 @@
+@(car: Form[CreateIdForm])(implicit messages: Messages)
+
+@import helper._
+
+
+@form(routes.Application.deleteCar()) {
+@inputText(car("id"))
+
+<div class="buttons">
+    <input type="submit" value="Delete Car"/>
+</div>
+}
