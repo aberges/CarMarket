@@ -69,6 +69,13 @@ class Application @Inject() (repo: CarDAO, val messagesApi: MessagesApi)
   }
 
   /**
+   * The return car action.
+   */
+  def returnData = Action {
+    Ok(views.html.returnData(idForm,new Car(0,"","")))
+  }
+
+  /**
    * The add car action.
    *
    * This is asynchronous, since we're invoking the asynchronous methods on CarDAO.
@@ -96,8 +103,8 @@ class Application @Inject() (repo: CarDAO, val messagesApi: MessagesApi)
    * A REST endpoint that gets all the people as JSON.
    */
   def getCars = Action.async {
-    repo.all().map { people =>
-      Ok(Json.toJson(people))
+    repo.all().map { cars =>
+      Ok(Json.toJson(cars))
     }
   }
 
@@ -113,6 +120,16 @@ class Application @Inject() (repo: CarDAO, val messagesApi: MessagesApi)
     val color: String = modifyForm.bindFromRequest.get.color
     repo.modify(id,name,color)
     Future.successful(Ok(views.html.index(carForm)))
+  }
+
+  def returnDataCar = Action.async { implicit request =>
+    val id: Int = idForm.bindFromRequest.get.id
+    //val car = repo.returnData(id)
+    //car => Ok(Json.toJson(car)))
+    //Future.successful(Ok(views.html.returnData(idForm,car)))
+    repo.returnData(id).map { cars =>
+      Ok(views.html.returnData(idForm, cars(0)))
+    }
   }
 }
 

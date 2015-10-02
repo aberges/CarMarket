@@ -99,4 +99,15 @@ class CarDAO @Inject() (dbConfigProvider: DatabaseConfigProvider)(implicit ec: E
     val sql = updateAction.statements.head
     cars.result
   }
+
+  /**
+   * Get a specific car from the database.
+   */
+  def returnData(id: Int): Future[Seq[Car]] = db.run {
+    val car = cars.filter(_.id === id)
+    /*val action = q.delete
+    var affectedRowsCount: Future[Int] = db.run(action)
+    val sql = action.statements.head*/
+    cars.result
+}
 }

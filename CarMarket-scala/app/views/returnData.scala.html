@@ -1,0 +1,11 @@
+@(car: Form[CreateIdForm], returnCar: Car)(implicit messages: Messages)
+
+@import helper._
+@returnCar.name
+@form(routes.Application.returnData()) {
+    @inputText(car("id"))
+
+    <div class="buttons">
+        <input type="submit" value="Get Car"/>
+    </div>
+}

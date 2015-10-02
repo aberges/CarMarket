@@ -10,6 +10,8 @@ GET     /delete                     controllers.Application.delete
 POST    /delete_car                 controllers.Application.deleteCar
 GET     /modify                     controllers.Application.modify
 POST    /modify_car                 controllers.Application.modifyCar
+GET     /returnData                 controllers.Application.returnData
+POST    /returnData_car             controllers.Application.returnDataCar
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
