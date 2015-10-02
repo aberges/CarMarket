@@ -108,6 +108,6 @@ class CarDAO @Inject() (dbConfigProvider: DatabaseConfigProvider)(implicit ec: E
     /*val action = q.delete
     var affectedRowsCount: Future[Int] = db.run(action)
     val sql = action.statements.head*/
-    cars.result
+    car.result
 }
 }

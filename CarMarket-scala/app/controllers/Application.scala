@@ -72,7 +72,7 @@ class Application @Inject() (repo: CarDAO, val messagesApi: MessagesApi)
    * The return car action.
    */
   def returnData = Action {
-    Ok(views.html.returnData(idForm,new Car(0,"","")))
+    Ok(views.html.returnData(idForm))
   }
 
   /**
@@ -83,9 +83,6 @@ class Application @Inject() (repo: CarDAO, val messagesApi: MessagesApi)
   def insertCar = Action.async { implicit request =>
     // Bind the form first, then fold the result, passing a function to handle errors, and a function to handle succes.
     carForm.bindFromRequest.fold(
-      // The error function. We return the index page with the error form, which will render the errors.
-      // We also wrap the result in a successful future, since this action is synchronous, but we're required to return
-      // a future because the person creation function returns a future.
       errorForm => {
         Future.successful(Ok(views.html.index(errorForm)))
       },
@@ -124,11 +121,13 @@ class Application @Inject() (repo: CarDAO, val messagesApi: MessagesApi)
 
   def returnDataCar = Action.async { implicit request =>
     val id: Int = idForm.bindFromRequest.get.id
-    //val car = repo.returnData(id)
-    //car => Ok(Json.toJson(car)))
-    //Future.successful(Ok(views.html.returnData(idForm,car)))
+
     repo.returnData(id).map { cars =>
-      Ok(views.html.returnData(idForm, cars(0)))
+      if(!cars.isEmpty){
+        Ok(views.html.car(cars(0)))
+      }else{
+        Ok(views.html.returnData(idForm))
+      }
     }
   }
 }
