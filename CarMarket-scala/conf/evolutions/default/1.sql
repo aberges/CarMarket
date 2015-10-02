@@ -7,7 +7,7 @@ create table "cars" (
   "price" int not null,
   "isNew" boolean not null,
   "mileAge" int,
-  "firstRegistration" int
+  "firstRegistration" date
 );
 
 # --- !Downs

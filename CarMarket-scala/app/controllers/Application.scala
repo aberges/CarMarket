@@ -1,5 +1,7 @@
 package controllers
 
+import java.sql.Date
+
 import play.api._
 import play.api.mvc._
 import play.api.i18n._
@@ -27,7 +29,7 @@ class Application @Inject() (repo: CarDAO, val messagesApi: MessagesApi)
       "price"             -> number.verifying(min(0), max(140)),
       "isNew"             -> boolean,
       "mileAge"           -> number.verifying(min(0), max(140)),
-      "firstRegistration" -> number.verifying(min(0), max(140))
+      "firstRegistration" -> sqlDate
     )(CreateCarForm.apply)(CreateCarForm.unapply)
   }
 
@@ -51,7 +53,7 @@ class Application @Inject() (repo: CarDAO, val messagesApi: MessagesApi)
       "price"             -> number.verifying(min(0), max(140)),
       "isNew"             -> boolean,
       "mileAge"           -> number.verifying(min(0), max(140)),
-      "firstRegistration" -> number.verifying(min(0), max(140))
+      "firstRegistration" -> sqlDate
     )(ModifyCarForm.apply)(ModifyCarForm.unapply)
   }
 
@@ -126,7 +128,7 @@ class Application @Inject() (repo: CarDAO, val messagesApi: MessagesApi)
     val price: Int = modifyForm.bindFromRequest.get.price
     val isNew: Boolean = modifyForm.bindFromRequest.get.isNew
     val mileAge: Int = modifyForm.bindFromRequest.get.mileAge
-    val firstRegistration: Int = modifyForm.bindFromRequest.get.firstRegistration
+    val firstRegistration: Date = modifyForm.bindFromRequest.get.firstRegistration
     repo.modify(id,title,fuel,price,isNew,mileAge,firstRegistration)
     Future.successful(Ok(views.html.index(carForm)))
   }
@@ -151,8 +153,8 @@ class Application @Inject() (repo: CarDAO, val messagesApi: MessagesApi)
  * in a different way to your models.  In this case, it doesn't make sense to have an id parameter in the form, since
  * that is generated once it's created.
  */
-case class CreateCarForm(title: String, fuel: String, price: Int, isNew: Boolean, mileAge: Int, firstRegistration: Int)
+case class CreateCarForm(title: String, fuel: String, price: Int, isNew: Boolean, mileAge: Int, firstRegistration: Date)
 
 case class CreateIdForm(id: Int)
 
-case class ModifyCarForm(id: Int, title: String, fuel: String, price: Int, isNew: Boolean, mileAge: Int, firstRegistration: Int)
+case class ModifyCarForm(id: Int, title: String, fuel: String, price: Int, isNew: Boolean, mileAge: Int, firstRegistration: Date)

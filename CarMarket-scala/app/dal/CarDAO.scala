@@ -1,5 +1,6 @@
 package dal
 
+import java.sql.Date
 import javax.inject.{ Inject, Singleton }
 import play.api.db.slick.DatabaseConfigProvider
 import slick.driver.JdbcProfile
@@ -40,7 +41,7 @@ class CarDAO @Inject() (dbConfigProvider: DatabaseConfigProvider)(implicit ec: E
 
     def mileAge = column[Int]("mileAge")
 
-    def firstRegistration = column[Int]("firstRegistration")
+    def firstRegistration = column[Date]("firstRegistration")
 
     /**
      * This is the tables default "projection".
@@ -64,7 +65,7 @@ class CarDAO @Inject() (dbConfigProvider: DatabaseConfigProvider)(implicit ec: E
    * This is an asynchronous operation, it will return a future of the created person, which can be used to obtain the
    * id for that person.
    */
-  def insert(title: String, fuel: String, price: Int, isNew: Boolean, mileAge: Int, firstRegistration: Int): Future[Car] = db.run {
+  def insert(title: String, fuel: String, price: Int, isNew: Boolean, mileAge: Int, firstRegistration: Date): Future[Car] = db.run {
     (cars.map(c => (c.title, c.fuel,c.price,c.isNew,c.mileAge,c.firstRegistration))
       returning cars.map(_.id)
       into ((params, id) => Car(id, params._1, params._2, params._3, params._4, params._5, params._6))
@@ -92,7 +93,7 @@ class CarDAO @Inject() (dbConfigProvider: DatabaseConfigProvider)(implicit ec: E
   /**
    * Modify a specific car in the database.
    */
-  def modify(id: Int, title: String, fuel: String, price: Int, isNew: Boolean, mileAge: Int, firstRegistration: Int): Unit = db.run {
+  def modify(id: Int, title: String, fuel: String, price: Int, isNew: Boolean, mileAge: Int, firstRegistration: Date): Unit = db.run {
     val q = for { c <- cars if c.id === id } yield (c.title,c.fuel,c.price,c.isNew,c.mileAge,c.firstRegistration)
     val updateAction = q.update(title, fuel, price, isNew, mileAge, firstRegistration)
 
