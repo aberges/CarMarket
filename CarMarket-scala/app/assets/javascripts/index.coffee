@@ -2,6 +2,10 @@ $ ->
   $.get "/cars", (cars) ->
     $.each cars, (index, car) ->
       id = $("<div>").addClass("id").text car.id
-      name = $("<div>").addClass("name").text car.name
-      color = $("<div>").addClass("color").text car.color
-      $("#cars").append $("<li>").append(id).append(name).append(color)
+      title = $("<div>").addClass("name").text car.title
+      fuel = $("<div>").addClass("color").text car.fuel
+      price = $("<div>").addClass("color").text car.price
+      isNew = $("<div>").addClass("color").text car.isNew
+      mileAge = $("<div>").addClass("color").text car.mileAge
+      firstRegistration = $("<div>").addClass("color").text car.firstRegistration
+      $("#cars").append $("<li>").append(id).append(title).append(fuel).append(price).append(isNew).append(mileAge).append(firstRegistration)

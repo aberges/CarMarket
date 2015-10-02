@@ -1,3 +1,7 @@
 id    = Id
-name  = Name
-color = Color
+title  = Title
+fuel = Fuel
+price = Price
+isNew = IsNew
+mileAge = MileAge
+firstRegistration = FirstRegistration

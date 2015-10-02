@@ -22,8 +22,12 @@ class Application @Inject() (repo: CarDAO, val messagesApi: MessagesApi)
    */
   val carForm: Form[CreateCarForm] = Form {
     mapping(
-      "name" -> nonEmptyText,
-      "color" -> nonEmptyText
+      "title"             -> nonEmptyText,
+      "fuel"              -> nonEmptyText,
+      "price"             -> number.verifying(min(0), max(140)),
+      "isNew"             -> boolean,
+      "mileAge"           -> number.verifying(min(0), max(140)),
+      "firstRegistration" -> number.verifying(min(0), max(140))
     )(CreateCarForm.apply)(CreateCarForm.unapply)
   }
 
@@ -41,9 +45,13 @@ class Application @Inject() (repo: CarDAO, val messagesApi: MessagesApi)
    */
   val modifyForm: Form[ModifyCarForm] = Form {
     mapping(
-      "id" -> number.verifying(min(0), max(140)),
-      "name" -> nonEmptyText,
-      "color" -> nonEmptyText
+      "id"                -> number.verifying(min(0), max(140)),
+      "title"             -> nonEmptyText,
+      "fuel"              -> nonEmptyText,
+      "price"             -> number.verifying(min(0), max(140)),
+      "isNew"             -> boolean,
+      "mileAge"           -> number.verifying(min(0), max(140)),
+      "firstRegistration" -> number.verifying(min(0), max(140))
     )(ModifyCarForm.apply)(ModifyCarForm.unapply)
   }
 
@@ -86,9 +94,9 @@ class Application @Inject() (repo: CarDAO, val messagesApi: MessagesApi)
       errorForm => {
         Future.successful(Ok(views.html.index(errorForm)))
       },
-      // There were no errors in the from, so create the person.
+      // There were no errors in the from, so create the car.
       car => {
-        repo.insert(car.name, car.color).map { _ =>
+        repo.insert(car.title,car.fuel,car.price,car.isNew,car.mileAge,car.firstRegistration).map { _ =>
           // If successful, we simply redirect to the index page.
           Redirect(routes.Application.index)
         }
@@ -113,9 +121,13 @@ class Application @Inject() (repo: CarDAO, val messagesApi: MessagesApi)
 
   def modifyCar = Action.async { implicit request =>
     val id: Int = modifyForm.bindFromRequest.get.id
-    val name: String = modifyForm.bindFromRequest.get.name
-    val color: String = modifyForm.bindFromRequest.get.color
-    repo.modify(id,name,color)
+    val title: String = modifyForm.bindFromRequest.get.title
+    val fuel: String = modifyForm.bindFromRequest.get.fuel
+    val price: Int = modifyForm.bindFromRequest.get.price
+    val isNew: Boolean = modifyForm.bindFromRequest.get.isNew
+    val mileAge: Int = modifyForm.bindFromRequest.get.mileAge
+    val firstRegistration: Int = modifyForm.bindFromRequest.get.firstRegistration
+    repo.modify(id,title,fuel,price,isNew,mileAge,firstRegistration)
     Future.successful(Ok(views.html.index(carForm)))
   }
 
@@ -139,8 +151,8 @@ class Application @Inject() (repo: CarDAO, val messagesApi: MessagesApi)
  * in a different way to your models.  In this case, it doesn't make sense to have an id parameter in the form, since
  * that is generated once it's created.
  */
-case class CreateCarForm(name: String, color: String)
+case class CreateCarForm(title: String, fuel: String, price: Int, isNew: Boolean, mileAge: Int, firstRegistration: Int)
 
 case class CreateIdForm(id: Int)
 
-case class ModifyCarForm(id: Int, name: String, color: String)
+case class ModifyCarForm(id: Int, title: String, fuel: String, price: Int, isNew: Boolean, mileAge: Int, firstRegistration: Int)

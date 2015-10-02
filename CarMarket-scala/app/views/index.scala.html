@@ -8,8 +8,12 @@
     <ul id="cars"></ul>
 
     @form(routes.Application.insertCar()) {
-        @inputText(car("name"))
-        @inputText(car("color"))
+        @inputText(car("title"))
+        @inputText(car("fuel"))
+        @inputText(car("price"))
+        @checkbox(car("isNew"))
+        @inputText(car("mileAge"))
+        @inputText(car("firstRegistration"))
 
         <div class="buttons">
             <input type="submit" value="Add Car"/>
