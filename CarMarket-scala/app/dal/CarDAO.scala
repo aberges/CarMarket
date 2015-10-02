@@ -44,12 +44,7 @@ class CarDAO @Inject() (dbConfigProvider: DatabaseConfigProvider)(implicit ec: E
     def firstRegistration = column[Date]("firstRegistration")
 
     /**
-     * This is the tables default "projection".
-     *
-     * It defines how the columns are converted to and from the Person object.
-     *
-     * In this case, we are simply passing the id, name and page parameters to the Person case classes
-     * apply and unapply methods.
+     * Tables default "projection".
      */
     def * = (id, title, fuel, price, isNew, mileAge, firstRegistration) <> ((Car.apply _).tupled, Car.unapply)
   }
@@ -60,10 +55,7 @@ class CarDAO @Inject() (dbConfigProvider: DatabaseConfigProvider)(implicit ec: E
   private val cars = TableQuery[CarsTable]
 
   /**
-   * Create a person with the given params.
-   *
-   * This is an asynchronous operation, it will return a future of the created person, which can be used to obtain the
-   * id for that person.
+   * Create a car with the given params.
    */
   def insert(title: String, fuel: String, price: Int, isNew: Boolean, mileAge: Int, firstRegistration: Date): Future[Car] = db.run {
     (cars.map(c => (c.title, c.fuel,c.price,c.isNew,c.mileAge,c.firstRegistration))
@@ -97,8 +89,6 @@ class CarDAO @Inject() (dbConfigProvider: DatabaseConfigProvider)(implicit ec: E
     val q = for { c <- cars if c.id === id } yield (c.title,c.fuel,c.price,c.isNew,c.mileAge,c.firstRegistration)
     val updateAction = q.update(title, fuel, price, isNew, mileAge, firstRegistration)
 
-    // Get the statement without having to specify an updated value:
-    //val sql = q.updateStatement
     val affectedRowsCount: Future[Int] = db.run(updateAction)
     val sql = updateAction.statements.head
     cars.result
@@ -109,9 +99,6 @@ class CarDAO @Inject() (dbConfigProvider: DatabaseConfigProvider)(implicit ec: E
    */
   def returnData(id: Int): Future[Seq[Car]] = db.run {
     val car = cars.filter(_.id === id)
-    /*val action = q.delete
-    var affectedRowsCount: Future[Int] = db.run(action)
-    val sql = action.statements.head*/
     car.result
 }
 }

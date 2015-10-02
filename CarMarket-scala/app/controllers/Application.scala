@@ -147,11 +147,7 @@ class Application @Inject() (repo: CarDAO, val messagesApi: MessagesApi)
 }
 
 /**
- * The create person form.
- *
- * Generally for forms, you should define separate objects to your models, since forms very often need to present data
- * in a different way to your models.  In this case, it doesn't make sense to have an id parameter in the form, since
- * that is generated once it's created.
+ * The needed forms
  */
 case class CreateCarForm(title: String, fuel: String, price: Int, isNew: Boolean, mileAge: Int, firstRegistration: Date)
 
